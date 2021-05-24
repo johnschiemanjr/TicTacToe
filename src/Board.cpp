@@ -19,9 +19,19 @@ Board::Board():tiles{{Tile("1"), Tile("2"), Tile("3")},
 	{Tile("4"), Tile("5"), Tile("6")},
 	{Tile("7"), Tile("8"), Tile("9")}},
 	occupied_tiles(0),
-	game_over(false)
+	game_over(false),
+	winner(false)
 {
 };
+
+Board::Board(bool game_over_copy, bool winner_copy, int occupied) : tiles{{Tile("1"), Tile("2"), Tile("3")},
+	{Tile("4"), Tile("5"), Tile("6")},
+	{Tile("7"), Tile("8"), Tile("9")}}
+{
+	this->game_over = game_over_copy;
+	this->occupied_tiles = occupied;
+	this->winner = winner_copy;
+}
 
 Board::~Board()
 {
@@ -58,6 +68,24 @@ bool Board::is_game_over() const
 	return game_over;
 }
 
+bool Board::has_winner() const
+{
+	return winner;
+}
+
+Board Board::copy_board() const
+{
+	Board new_board = Board(game_over, winner, occupied_tiles);
+	for (int i = 0; i < 3; i++)
+	{
+		for (int j = 0; j < 3; j++)
+		{
+			new_board.tiles[i][j].set_status(tiles[i][j].get_status());
+		}
+	}
+	return new_board;
+}
+
 set<string> Board::get_valid_moves() const
 {
 	set<string> valid_moves;
@@ -87,6 +115,7 @@ void Board::check_winner(int x, int y, string symbol)
         if(i == 2)
         {
         	game_over = true;
+        	winner = true;
         }
     }
 
@@ -100,6 +129,7 @@ void Board::check_winner(int x, int y, string symbol)
         if(i == 2)
         {
         	game_over = true;
+        	winner = true;
         }
     }
 
@@ -116,6 +146,7 @@ void Board::check_winner(int x, int y, string symbol)
             if(i == 2)
             {
             	game_over = true;
+            	winner = true;
             }
         }
     }
@@ -132,6 +163,7 @@ void Board::check_winner(int x, int y, string symbol)
             if(i == 2)
             {
             	game_over = true;
+            	winner = true;
             }
         }
     }
@@ -140,5 +172,6 @@ void Board::check_winner(int x, int y, string symbol)
     if(occupied_tiles == 9)
     {
         game_over = true;
+        winner = false;
     }
 }

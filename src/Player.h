@@ -19,6 +19,7 @@ public:
 	Player(string, string);
 	string get_name() const;
 	string get_symbol() const;
+	string get_random_move(set<string> valid_moves) const;
 	virtual string take_turn(Board) = 0;
 	virtual ~Player();
 private:

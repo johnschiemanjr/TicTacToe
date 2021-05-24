@@ -10,8 +10,6 @@
 #include <set>
 #include "Board.h"
 #include "ComputerPlayer.h"
-#include <time.h>
-#include <random>
 #include "Player.h"
 #include <map>
 #include <utility>
@@ -48,10 +46,7 @@ string ComputerPlayer::take_turn(Board board)
 	switch (strategy) {
 	case Strategy::RANDOM:
 	{
-		srand(time(NULL));
-		set<string> valid_moves = board.get_valid_moves();
-		auto r = rand() % valid_moves.size(); // not _really_ random
-		evaluation.best_move = *select_random(valid_moves, r);
+		evaluation.best_move = get_random_move(board.get_valid_moves());
 		break;
 	}
 	case Strategy::MINIMAX:
@@ -72,12 +67,30 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 {
 	Eval evaluation;
 
-	Node initial_node = Node(false, NULL);
+	Node initial_node = Node(false, NULL, &current_board, "NO_MOVE");
 
-	//set<>
+	// get children nodes
+	set<Node*> children = initial_node.children;
 	for (auto move : current_board.get_valid_moves())
 	{
+		Node *child = new Node(true, &initial_node, &current_board, move);
+		children.insert(child);
+	}
 
+	int iterations = 1;
+	if (iterations == 0)
+	{
+		// First iteration, roll out on first node.
+		//rollout(children[0]);
+	}
+	else
+	{
+		cout << "Calculating UCB values..." << endl;
+		for(auto child : children)
+		{
+			child->state.print_board();
+			delete child;
+		}
 	}
 
 	const int simulations = 200000;
@@ -88,12 +101,8 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 		//back_propogate(leaf, simulation_result);
 	}
 
+	evaluation.best_move = get_random_move(current_board.get_valid_moves());
 	return evaluation;
-}
-
-double ComputerPlayer::get_ucb(Node node)
-{
-
 }
 
 Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
@@ -108,12 +117,12 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 		}
 		else if (maximizing_player)
 		{
-			// human has won
+			// other player has won
 			evaluation.evaluation = -1;
 		}
 		else
 		{
-			// computer has won
+			// this player has won
 			evaluation.evaluation = 1;
 		}
 		return evaluation;

@@ -21,9 +21,12 @@ int main()
 	{
 	cout << "Game " << i + 1 << endl;
 	Board board = Board();
+	Tile tile = Tile("0");
+	cout << sizeof(board) << endl;
 	board.print_board();
 
-	HumanPlayer *human = (new HumanPlayer("Human", O));
+	//HumanPlayer *human = new HumanPlayer("Computer 1", O);
+	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::MONTE_CARLO);
 	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MINIMAX);
 	vector<Player*> players;
 
@@ -49,11 +52,12 @@ int main()
 		turn_counter++;
 
 		board.print_board();
+		system("pause");
 
 	} while (!board.is_game_over());
 
 	const int MAX_MOVES = 9;
-	if (turn_counter == MAX_MOVES)
+	if (turn_counter == MAX_MOVES && !board.has_winner())
 	{
 		cout << "It's a draw!" << endl;
 		draws++;
