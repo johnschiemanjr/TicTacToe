@@ -10,11 +10,11 @@
 #include <set>
 #include <math.h>
 
-Node::Node(bool is_leaf, Node *parent, Board *state, string move, string symbol) : visits(0), total_score(0)
+Node::Node(Node *parent, Board *state, string move, string symbol) : visits(0), total_score(0)
 {
-	this->is_leaf = is_leaf;
 	this->parent = parent;
 	this->move = move;
+	this->symbol_played = symbol;
 	if (move.compare("NO_MOVE") != 0)
 	{
 		this->state = state->copy_board();
@@ -33,7 +33,7 @@ Node::~Node()
 double Node::get_ucb(int iterations) const
 {
 	double inside_sqrt = (log(iterations)) / visits;
-	double outside_sqrt = sqrt(inside_sqrt) * 2;
+	double outside_sqrt = sqrt(inside_sqrt) * 1.4;
 	double vi = total_score / visits;
 	return vi + outside_sqrt;
 }

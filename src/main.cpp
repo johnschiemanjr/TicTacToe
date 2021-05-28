@@ -25,7 +25,7 @@ int main()
 	board.print_board();
 
 	//HumanPlayer *human = new HumanPlayer("Computer 1", O);
-	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::RANDOM);
+	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::MINIMAX);
 	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MONTE_CARLO);
 	vector<Player*> players;
 

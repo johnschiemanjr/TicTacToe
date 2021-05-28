@@ -37,7 +37,7 @@ public:
 	string get_opposite_symbol(string) const;
 	void rollout(Node*) const;
 	Eval monte_carlo(Board);
-	void search(Node*) const;
+	void search(Node*, int) const;
 	Eval mini_max(Board, bool);
 	ComputerPlayer(string, string, Strategy);
 	virtual ~ComputerPlayer();

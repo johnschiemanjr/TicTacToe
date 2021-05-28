@@ -21,11 +21,11 @@ public:
 	Node *parent;
 	vector<Node*> children;
 	int visits;
-	bool is_leaf;
 	Board state;
 	string move;
+	string symbol_played;
 	double total_score;
-	Node(bool, Node*, Board*, string, string);
+	Node(Node*, Board*, string, string);
 	~Node();
 	double get_ucb(int iterations) const;
 };
