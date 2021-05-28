@@ -8,8 +8,9 @@
 #include "Node.h"
 #include <memory>
 #include <set>
+#include <math.h>
 
-Node::Node(bool is_leaf, Node *parent, Board *state, string move) : visits(0), total_score(0)
+Node::Node(bool is_leaf, Node *parent, Board *state, string move, string symbol) : visits(0), total_score(0)
 {
 	this->is_leaf = is_leaf;
 	this->parent = parent;
@@ -17,7 +18,7 @@ Node::Node(bool is_leaf, Node *parent, Board *state, string move) : visits(0), t
 	if (move.compare("NO_MOVE") != 0)
 	{
 		this->state = state->copy_board();
-		this->state.make_move(move, "O");
+		this->state.make_move(move, symbol);
 	}
 }
 
@@ -29,8 +30,11 @@ Node::~Node()
 	}
 }
 
-double Node::get_ucb() const
+double Node::get_ucb(int iterations) const
 {
-	return 1.2;
+	double inside_sqrt = (log(iterations)) / visits;
+	double outside_sqrt = sqrt(inside_sqrt) * 2;
+	double vi = total_score / visits;
+	return vi + outside_sqrt;
 }
 

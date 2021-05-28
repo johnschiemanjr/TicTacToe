@@ -63,46 +63,88 @@ string ComputerPlayer::take_turn(Board board)
 	return evaluation.best_move;
 }
 
+void ComputerPlayer::search(Node *node) const
+{
+
+}
+
 Eval ComputerPlayer::monte_carlo(Board current_board)
 {
 	Eval evaluation;
 
-	Node initial_node = Node(false, NULL, &current_board, "NO_MOVE");
+	Node initial_node = Node(false, NULL, &current_board, "NO_MOVE", "NO_SYMBOL");
+
 
 	// get children nodes
-	set<Node*> children = initial_node.children;
+	vector<Node*> children = initial_node.children;
 	for (auto move : current_board.get_valid_moves())
 	{
-		Node *child = new Node(true, &initial_node, &current_board, move);
-		children.insert(child);
+		Node *child = new Node(true, &initial_node, &current_board, move, get_symbol());
+		children.push_back(child);
 	}
 
-	int iterations = 1;
-	if (iterations == 0)
+	string move_to_explore = children[0]->move;
+	const int ITERATIONS_CONSTANT = 10;
+	for (int iterations = 0; iterations < ITERATIONS_CONSTANT; iterations++)
 	{
-		// First iteration, roll out on first node.
-		//rollout(children[0]);
+		cout << "Calculating UCB values..." << endl;
+		double max_ucb = 0;
+		for(auto child : children)
+		{
+			if (child->visits == 0)
+			{
+				cout << child->move << " has not been visited...rolling out." << endl;
+				rollout(child);
+				break;
+			}
+			else
+			{
+				if (child->get_ucb(iterations) > max_ucb)
+				{
+					max_ucb = child->get_ucb(iterations);
+					move_to_explore = child->move;
+				}
+				cout << child->move << " " << child->get_ucb(iterations) << endl;
+			}
+		}
+		cout << "Exploring " << move_to_explore << endl;
+	}
+
+	for(auto child : children)
+	{
+		delete child;
+	}
+
+	evaluation.best_move = move_to_explore;
+	return evaluation;
+}
+
+void ComputerPlayer::rollout(Node *node) const
+{
+	cout << "Simulating move " << node->move << endl;
+	string next_symbol = get_opposite_symbol(get_symbol());
+	while (!node->state.is_game_over())
+	{
+		node->state.make_move(get_random_move(node->state.get_valid_moves()), next_symbol);
+		next_symbol = get_opposite_symbol(next_symbol);
+		node->state.print_board();
+	}
+
+	if (!node->state.has_winner())
+	{
+		cout << "Simulation was a draw!" << endl;
+	}
+	else if (next_symbol.compare(get_symbol()))
+	{
+		cout << "I have won the simulation!" << endl;;
+		node->total_score++;
 	}
 	else
 	{
-		cout << "Calculating UCB values..." << endl;
-		for(auto child : children)
-		{
-			child->state.print_board();
-			delete child;
-		}
+		cout << "My opponent has won the simulation!" << endl;
+		node->total_score--;
 	}
-
-	const int simulations = 200000;
-	for (int i = 0; i < simulations; i++)
-	{
-		//Node leaf = traverse(initial_node);
-		//simulation_result = rollout(leaf);
-		//back_propogate(leaf, simulation_result);
-	}
-
-	evaluation.best_move = get_random_move(current_board.get_valid_moves());
-	return evaluation;
+	node->visits++;
 }
 
 Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
@@ -110,7 +152,7 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	Eval evaluation;
 	if (current_board.is_game_over())
 	{
-		if (current_board.get_valid_moves().size() == 0)
+		if (current_board.get_valid_moves().size() == 0 && !current_board.has_winner())
 		{
 			// game is a draw
 			evaluation.evaluation = 0;

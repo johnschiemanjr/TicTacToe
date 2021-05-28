@@ -45,7 +45,6 @@ string Player::get_symbol() const
 
 string Player::get_random_move(set<string> valid_moves) const
 {
-	srand(time(NULL));
 	auto r = rand() % valid_moves.size();
 	return *select_random(valid_moves, r);
 }

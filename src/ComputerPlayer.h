@@ -35,9 +35,10 @@ public:
 	using Player::get_symbol;
 	string take_turn(Board) override;
 	string get_opposite_symbol(string) const;
+	void rollout(Node*) const;
 	Eval monte_carlo(Board);
+	void search(Node*) const;
 	Eval mini_max(Board, bool);
-	double get_ucb(Node);
 	ComputerPlayer(string, string, Strategy);
 	virtual ~ComputerPlayer();
 	Strategy strategy;

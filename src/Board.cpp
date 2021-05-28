@@ -105,6 +105,13 @@ set<string> Board::get_valid_moves() const
 
 void Board::check_winner(int x, int y, string symbol)
 {
+    //check draw
+    if(occupied_tiles == 9)
+    {
+        game_over = true;
+        winner = false;
+    }
+
     //check row
 	for(int i = 0; i < 3; i++)
     {
@@ -166,12 +173,5 @@ void Board::check_winner(int x, int y, string symbol)
             	winner = true;
             }
         }
-    }
-
-    //check draw
-    if(occupied_tiles == 9)
-    {
-        game_over = true;
-        winner = false;
     }
 }
