@@ -173,35 +173,24 @@ void ComputerPlayer::search(Node *current_node, int iterations) const
 		double max_ucb = -9999999; // -1 is the minimum
 		Node *move_to_explore = NULL;
 		vector<Node*> children = current_node->children;
-		if (current_node->symbol_played.compare(get_symbol()))
+		//cout << "Calculating UCB values..." << endl;
+		for(auto child : children)
 		{
-			//cout << "It's my turn, so pick the move that looks the most promising..." << endl;
-			//cout << "Calculating UCB values..." << endl;
-			for(auto child : children)
+			if (child->visits == 0)
 			{
-				if (child->visits == 0)
-				{
-					//cout << child->move << " has not been visited...calling search on this move" << endl;
-					search(child, iterations);
-					return;
-				}
-				else
-				{
-					if (child->get_ucb(current_node->visits) > max_ucb)
-					{
-						max_ucb = child->get_ucb(current_node->visits);
-						move_to_explore = child;
-					}
-					//cout << child->move << " " << child->get_ucb(current_node->visits) << " total wins: "<< child->total_score << endl;
-				}
+				//cout << child->move << " has not been visited...calling search on this move" << endl;
+				search(child, iterations);
+				return;
 			}
-		}
-		else
-		{
-			auto r = rand() % children.size();
-			auto it = begin(children);
-			advance(it, r);
-			move_to_explore = *it;
+			else
+			{
+				if (child->get_ucb(current_node->visits) > max_ucb)
+				{
+					max_ucb = child->get_ucb(current_node->visits);
+					move_to_explore = child;
+				}
+				//cout << child->move << " " << child->get_ucb(current_node->visits) << " total wins: "<< child->total_score << endl;
+			}
 		}
 
 		//cout << "Exploring " << move_to_explore->move << endl;
@@ -226,22 +215,23 @@ void ComputerPlayer::rollout(Node *node) const
 	{
 		//cout << "Simulation was a draw!" << endl;
 	}
-	else if (symbol_to_play.compare(get_symbol()))
+	else if (symbol_to_play.compare(get_opposite_symbol(node->symbol_played)))
 	{
-		//cout << "I have won the simulation!" << endl;;
-		eval = 1;
-		node->total_score++;
+		//cout << get_opposite_symbol(node->symbol_played) << " has won the simulation!" << endl;;
+		eval = -1;
+		node->total_score--;
 	}
 	else
 	{
-		//cout << "My opponent has won the simulation!" << endl;
-		eval = -1;
-		node->total_score--;
+		//cout << node->symbol_played << " has won the simulation!" << endl;
+		eval = 1;
+		node->total_score++;
 	}
 	//cout << "Back propogating this information up the tree..." << endl;
 	Node *parent_node = node->parent;
 	while (parent_node)
 	{
+		eval *= -1;
 		parent_node->visits++;
 		parent_node->total_score = parent_node->total_score + eval;
 		parent_node = parent_node->parent;
