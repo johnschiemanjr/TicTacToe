@@ -63,6 +63,71 @@ string ComputerPlayer::take_turn(Board board)
 	return evaluation.best_move;
 }
 
+Eval ComputerPlayer::monte_carlo(Board current_board)
+{
+	Eval evaluation;
+
+	Node initial_node = Node(NULL, &current_board, "NO_MOVE", "NO_SYMBOL");
+	// get children nodes
+	for (auto move : current_board.get_valid_moves())
+	{
+		Node *child = new Node(&initial_node, &current_board, move, get_symbol());
+		initial_node.children.push_back(child);
+	}
+
+	const int ITERATIONS_CONSTANT = 10000;
+	bool problem_game = false;
+	for (int iterations = 0; iterations < ITERATIONS_CONSTANT; iterations++)
+	{
+		if (iterations == 5000)
+		{
+			if (current_board.get_valid_moves().size() == 8)
+			{
+				for(auto child : initial_node.children)
+				{
+					double average_score = child->total_score / child->visits;
+					cout << "Move " << child->move << " Total score : " << child->total_score << " visits: " << child->visits << " for an average score of " << average_score << endl;
+				}
+				if (initial_node.children[2]->total_score > initial_node.children[4]->total_score
+						|| initial_node.children[0]->total_score > initial_node.children[4]->total_score
+						|| initial_node.children[6]->total_score > initial_node.children[4]->total_score)
+				{
+					cout << "Possible problem game." << endl;
+					problem_game = false;
+					//getchar();
+				}
+			}
+
+		}
+		if (!problem_game)
+		{
+			search(&initial_node, iterations);
+		}
+		else
+		{
+			getchar();
+			search_with_log(&initial_node, iterations);
+		}
+	}
+
+	double max_score = -99999999;
+	evaluation.best_move = get_random_move(current_board.get_valid_moves());
+	for(auto child : initial_node.children)
+	{
+		double average_score = child->total_score / child->visits;
+		if (average_score > max_score)
+		{
+			max_score = average_score;
+			evaluation.best_move = child->move;
+		}
+		cout << "Move " << child->move << " Total score : " << child->total_score << " visits: " << child->visits << " for an average score of " << average_score << endl;
+	}
+
+
+	cout << "Best move: " << evaluation.best_move << endl;
+	return evaluation;
+}
+
 void ComputerPlayer::search(Node *current_node, int iterations) const
 {
 	//cout << "Searching for move " << current_node->move << endl;
@@ -105,67 +170,43 @@ void ComputerPlayer::search(Node *current_node, int iterations) const
 		// not a leaf node
 		//cout << "NOT a leaf node!" << endl;
 		// call search on child node that maximizes UCB
-		vector<Node*> children = current_node->children;
-		//cout << "Calculating UCB values..." << endl;
-		double max_ucb = -2; // -1 is the minimum
+		double max_ucb = -9999999; // -1 is the minimum
 		Node *move_to_explore = NULL;
-		for(auto child : children)
+		vector<Node*> children = current_node->children;
+		if (current_node->symbol_played.compare(get_symbol()))
 		{
-			if (child->visits == 0)
+			//cout << "It's my turn, so pick the move that looks the most promising..." << endl;
+			//cout << "Calculating UCB values..." << endl;
+			for(auto child : children)
 			{
-				//cout << child->move << " has not been visited...calling search on this move" << endl;
-				search(child, iterations);
-				return;
-			}
-			else
-			{
-				if (child->get_ucb(iterations) > max_ucb)
+				if (child->visits == 0)
 				{
-					max_ucb = child->get_ucb(current_node->visits);
-					move_to_explore = child;
+					//cout << child->move << " has not been visited...calling search on this move" << endl;
+					search(child, iterations);
+					return;
 				}
-				//cout << child->move << " " << child->get_ucb(iterations) << endl;
+				else
+				{
+					if (child->get_ucb(current_node->visits) > max_ucb)
+					{
+						max_ucb = child->get_ucb(current_node->visits);
+						move_to_explore = child;
+					}
+					//cout << child->move << " " << child->get_ucb(current_node->visits) << " total wins: "<< child->total_score << endl;
+				}
 			}
 		}
+		else
+		{
+			auto r = rand() % children.size();
+			auto it = begin(children);
+			advance(it, r);
+			move_to_explore = *it;
+		}
+
 		//cout << "Exploring " << move_to_explore->move << endl;
 		search(move_to_explore, iterations);
 	}
-}
-
-Eval ComputerPlayer::monte_carlo(Board current_board)
-{
-	Eval evaluation;
-
-	Node initial_node = Node(NULL, &current_board, "NO_MOVE", "NO_SYMBOL");
-	// get children nodes
-	for (auto move : current_board.get_valid_moves())
-	{
-		Node *child = new Node(&initial_node, &current_board, move, get_symbol());
-		initial_node.children.push_back(child);
-	}
-
-	const int ITERATIONS_CONSTANT = 100000;
-	for (int iterations = 0; iterations < ITERATIONS_CONSTANT; iterations++)
-	{
-		search(&initial_node, iterations);
-	}
-
-	double max_score = -99999999;
-	evaluation.best_move = get_random_move(current_board.get_valid_moves());
-	for(auto child : initial_node.children)
-	{
-		double average_score = child->total_score / child->visits;
-		if (average_score > max_score)
-		{
-			max_score = average_score;
-			evaluation.best_move = child->move;
-		}
-		cout << "Move " << child->move << " Total score : " << child->total_score << " visits: " << child->visits << " for an average score of " << average_score << endl;
-	}
-
-
-	//cout << "Best move: " << evaluation.best_move << endl;
-	return evaluation;
 }
 
 void ComputerPlayer::rollout(Node *node) const
@@ -284,4 +325,125 @@ string ComputerPlayer::get_opposite_symbol(string symbol) const
 	{
 		return X;
 	}
+}
+
+void ComputerPlayer::search_with_log(Node *current_node, int iterations) const
+{
+	cout << "Searching for move " << current_node->move << endl;
+	// check if leaf node
+	if (current_node->children.size() == 0)
+	{
+		cout << "It's a leaf node!" << endl;
+		// leaf node
+		if (current_node->visits == 0)
+		{
+			cout << "No visits, rolling out!" << endl;
+			Board current_board = current_node->state.copy_board();
+			rollout_with_log(current_node);
+			current_node->state = current_board.copy_board();
+		}
+		else
+		{
+			cout << "We've visited this node before. Here's the board we're evaluating:" << endl;
+			current_node->state.print_board();
+			if (current_node->state.is_game_over())
+			{
+				cout << "This is a terminal node! Rollout to get eval." << endl;
+				rollout_with_log(current_node);
+			}
+			else
+			{
+				cout << "Not a terminal node. Let's create it's children." << endl;
+				for (auto move : current_node->state.get_valid_moves())
+				{
+					Node *child = new Node(current_node, &current_node->state, move, get_opposite_symbol(current_node->symbol_played));
+					current_node->children.push_back(child);
+				}
+				cout << current_node->children.size() << endl;
+				search_with_log(current_node->children[0], iterations);
+			}
+		}
+	}
+	else
+	{
+		// not a leaf node
+		cout << "NOT a leaf node!" << endl;
+		// call search on child node that maximizes UCB
+		double max_ucb = -9999999; // -1 is the minimum
+		Node *move_to_explore = NULL;
+		vector<Node*> children = current_node->children;
+		if (current_node->symbol_played.compare(get_symbol()))
+		{
+			cout << "It's my turn, so pick the move that looks the most promising..." << endl;
+			cout << "Calculating UCB values..." << endl;
+			for(auto child : children)
+			{
+				if (child->visits == 0)
+				{
+					cout << child->move << " has not been visited...calling search on this move" << endl;
+					search_with_log(child, iterations);
+					return;
+				}
+				else
+				{
+					if (child->get_ucb(current_node->visits) > max_ucb)
+					{
+						max_ucb = child->get_ucb(current_node->visits);
+						move_to_explore = child;
+					}
+					cout << child->move << " " << child->get_ucb(current_node->visits) << " total wins: "<< child->total_score << endl;
+				}
+			}
+		}
+		else
+		{
+			auto r = rand() % children.size();
+			auto it = begin(children);
+			advance(it, r);
+			move_to_explore = *it;
+		}
+
+		cout << "Exploring " << move_to_explore->move << endl;
+		search_with_log(move_to_explore, iterations);
+	}
+}
+
+void ComputerPlayer::rollout_with_log(Node *node) const
+{
+	cout << "Simulating move " << node->move << endl;
+	node->state.print_board();
+	string symbol_to_play = get_opposite_symbol(node->symbol_played);
+	while (!node->state.is_game_over())
+	{
+		node->state.make_move(get_random_move(node->state.get_valid_moves()), symbol_to_play);
+		symbol_to_play = get_opposite_symbol(symbol_to_play);
+		node->state.print_board();
+	}
+
+	int eval = 0;
+	if (!node->state.has_winner())
+	{
+		cout << "Simulation was a draw!" << endl;
+	}
+	else if (symbol_to_play.compare(get_symbol()))
+	{
+		cout << "I have won the simulation!" << endl;;
+		eval = 1;
+		node->total_score++;
+	}
+	else
+	{
+		cout << "My opponent has won the simulation!" << endl;
+		eval = -1;
+		node->total_score--;
+	}
+	cout << "Back propogating this information up the tree..." << endl;
+	Node *parent_node = node->parent;
+	while (parent_node)
+	{
+		parent_node->visits++;
+		parent_node->total_score = parent_node->total_score + eval;
+		parent_node = parent_node->parent;
+	}
+	node->visits++;
 }

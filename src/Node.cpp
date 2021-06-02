@@ -33,7 +33,7 @@ Node::~Node()
 double Node::get_ucb(int iterations) const
 {
 	double inside_sqrt = (log(iterations)) / visits;
-	double outside_sqrt = sqrt(inside_sqrt) * 1.4;
+	double outside_sqrt = sqrt(inside_sqrt) * 2;
 	double vi = total_score / visits;
 	return vi + outside_sqrt;
 }
