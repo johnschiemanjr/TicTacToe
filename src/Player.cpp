@@ -8,8 +8,20 @@
 #include "Player.h"
 #include <string>
 #include <iostream>
+#include <time.h>
+#include <random>
+#include <string>
+
 
 using namespace std;
+
+template<typename S>
+auto select_random(const S &s, size_t n)
+{
+	auto it = begin(s);
+	advance(it,n);
+	return it;
+}
 
 Player::Player(string player_name, string player_symbol)
 {

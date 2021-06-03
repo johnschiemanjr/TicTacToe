@@ -10,6 +10,8 @@
 
 #include <string>
 #include <memory>
+#include <vector>
+#include "Board.h"
 
 using namespace std;
 
@@ -17,11 +19,17 @@ class Node
 {
 public:
 	Node *parent;
+	vector<Node*> children;
 	int visits;
-	bool is_leaf;
+	Board state;
+	string move;
+	string symbol_played;
 	double total_score;
-	Node(bool, Node*);
+	Node(Node*, Board*, string, string);
 	~Node();
+	void search();
+	void rollout();
+	double get_ucb(int iterations) const;
 };
 
 #endif /* NODE_H_ */
