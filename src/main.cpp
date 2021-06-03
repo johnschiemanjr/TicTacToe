@@ -31,7 +31,7 @@ int main()
 
 	if (rand() % 2 == 0)
 	{
-		cout << human->get_name() << " goes first!!!!" << endl;
+		cout << human->get_name() << " goes first!" << endl;
 		players.push_back(human);
 		players.push_back(computer);
 	}
