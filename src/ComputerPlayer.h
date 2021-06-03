@@ -34,12 +34,7 @@ public:
 	using Player::get_name;
 	using Player::get_symbol;
 	string take_turn(Board) override;
-	string get_opposite_symbol(string) const;
-	void rollout(Node*) const;
-	void rollout_with_log(Node*) const;
 	Eval monte_carlo(Board);
-	void search(Node*, int) const;
-	void search_with_log(Node*, int) const;
 	Eval mini_max(Board, bool);
 	ComputerPlayer(string, string, Strategy);
 	virtual ~ComputerPlayer();

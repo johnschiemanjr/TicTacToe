@@ -27,6 +27,8 @@ public:
 	double total_score;
 	Node(Node*, Board*, string, string);
 	~Node();
+	void search();
+	void rollout();
 	double get_ucb(int iterations) const;
 };
 
