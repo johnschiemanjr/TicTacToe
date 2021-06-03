@@ -10,23 +10,14 @@
 #include <set>
 #include "Board.h"
 #include "ComputerPlayer.h"
-#include <time.h>
-#include <random>
 #include "Player.h"
 #include <map>
 #include <utility>
 #include "Node.h"
 #include <memory>
+#include "helper.h"
 
 using namespace std;
-
-template<typename S>
-auto select_random(const S &s, size_t n)
-{
-	auto it = begin(s);
-	advance(it,n);
-	return it;
-}
 
 ComputerPlayer::ComputerPlayer(string player_name, string player_symbol, Strategy strategy) :
 		Player(player_name, player_symbol),
@@ -48,10 +39,7 @@ string ComputerPlayer::take_turn(Board board)
 	switch (strategy) {
 	case Strategy::RANDOM:
 	{
-		srand(time(NULL));
-		set<string> valid_moves = board.get_valid_moves();
-		auto r = rand() % valid_moves.size(); // not _really_ random
-		evaluation.best_move = *select_random(valid_moves, r);
+		evaluation.best_move = get_random_move(board.get_valid_moves());
 		break;
 	}
 	case Strategy::MINIMAX:
@@ -72,28 +60,38 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 {
 	Eval evaluation;
 
-	Node initial_node = Node(false, NULL);
-
-	//set<>
+	Node *initial_node = new Node(NULL, &current_board, "NO_MOVE", "NO_SYMBOL");
+	// get children nodes
 	for (auto move : current_board.get_valid_moves())
 	{
-
+		Node *child = new Node(initial_node, &current_board, move, get_symbol());
+		initial_node->children.push_back(child);
 	}
 
-	const int simulations = 200000;
-	for (int i = 0; i < simulations; i++)
+	const int ITERATIONS_CONSTANT = 10000;
+	for (int iterations = 0; iterations < ITERATIONS_CONSTANT; iterations++)
 	{
-		//Node leaf = traverse(initial_node);
-		//simulation_result = rollout(leaf);
-		//back_propogate(leaf, simulation_result);
+		initial_node->search();
 	}
 
+	double max_score = -99999999;
+	evaluation.best_move = get_random_move(current_board.get_valid_moves());
+	for(auto child : initial_node->children)
+	{
+		double average_score = child->total_score / child->visits;
+		if (average_score > max_score)
+		{
+			max_score = average_score;
+			evaluation.best_move = child->move;
+		}
+		//cout << "Move " << child->move << " Total score : " << child->total_score << " visits: " << child->visits << " for an average score of " << average_score << endl;
+	}
+
+
+	//cout << "Best move: " << evaluation.best_move << endl;
 	return evaluation;
-}
 
-double ComputerPlayer::get_ucb(Node node)
-{
-
+	delete initial_node;
 }
 
 Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
@@ -101,19 +99,19 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	Eval evaluation;
 	if (current_board.is_game_over())
 	{
-		if (current_board.get_valid_moves().size() == 0)
+		if (current_board.get_valid_moves().size() == 0 && !current_board.has_winner())
 		{
 			// game is a draw
 			evaluation.evaluation = 0;
 		}
 		else if (maximizing_player)
 		{
-			// human has won
+			// other player has won
 			evaluation.evaluation = -1;
 		}
 		else
 		{
-			// computer has won
+			// this player has won
 			evaluation.evaluation = 1;
 		}
 		return evaluation;
@@ -160,16 +158,4 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	}
 
 	return evaluation;
-}
-
-string ComputerPlayer::get_opposite_symbol(string symbol) const
-{
-	if (symbol.compare(X) == 0)
-	{
-		return O;
-	}
-	else
-	{
-		return X;
-	}
 }
