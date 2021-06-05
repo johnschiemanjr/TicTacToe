@@ -122,72 +122,23 @@ set<string> Board::get_valid_moves() const
 void Board::check_winner(int x, int y, string symbol)
 {
 	// check draw
-	if(((x_bitboard | o_bitboard) & 0x01FF) == 0x01FF)
+	if (((x_bitboard | o_bitboard) & 0x01FF) == 0x01FF)
 	{
         game_over = true;
         winner = false;
     }
 
-    //check row
-	for(int i = 0; i < 3; i++)
-    {
-        if(tiles[x][i].get_status().compare(symbol) != 0)
-        {
-            break;
-        }
-        if(i == 2)
-        {
-        	game_over = true;
-        	winner = true;
-        }
-    }
-
-    //check column
-    for(int i = 0; i < 3; i++)
-    {
-        if(tiles[i][y].get_status().compare(symbol) != 0)
-        {
-            break;
-        }
-        if(i == 2)
-        {
-        	game_over = true;
-        	winner = true;
-        }
-    }
-
-    //check diag
-    if(x == y)
-    {
-        //we're on a diagonal
-    	for(int i = 0; i < 3; i++)
-    	{
-            if(tiles[i][i].get_status().compare(symbol) != 0)
-            {
-                break;
-            }
-            if(i == 2)
-            {
-            	game_over = true;
-            	winner = true;
-            }
-        }
-    }
-
-    //check anti diag
-    if(x + y == 2)
-    {
-    	for(int i = 0; i < 3; i++)
-    	{
-            if(tiles[i][2-i].get_status().compare(symbol) != 0)
-            {
-                break;
-            }
-            if(i == 2)
-            {
-            	game_over = true;
-            	winner = true;
-            }
-        }
-    }
+	for (unsigned int i = 0; i < wins.size(); i++)
+	{
+		if ((x_bitboard & wins[i]) == wins[i])
+		{
+			game_over = true;
+			winner = true;
+		}
+		else if ((o_bitboard & wins[i]) == wins[i])
+		{
+			game_over = true;
+			winner = true;
+		}
+	}
 }
