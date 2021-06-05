@@ -48,7 +48,8 @@ public:
 	bool is_game_over() const;
 	bool has_winner() const;
 	set<string> get_valid_moves() const;
-	void check_winner(int, int, string);
+	string get_space(int space) const;
+	void check_winner();
 	Board copy_board() const;
 	virtual ~Board();
 private:

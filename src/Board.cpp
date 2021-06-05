@@ -58,20 +58,33 @@ void Board::make_move(string tile, string player_symbol)
 			{
 				tiles[i][j].set_status(player_symbol);
 				occupied_tiles++;
-				check_winner(i, j, player_symbol);
+				check_winner();
 			}
 		}
 	}
 }
 
+string Board::get_space(int space) const
+{
+	if ((x_bitboard & spaces[space]) == spaces[space])
+	{
+		return X;
+	}
+	else if ((o_bitboard & spaces[space]) == spaces[space])
+	{
+		return O;
+	}
+	else return to_string(space);
+}
+
 void Board::print_board() const
 {
 	cout << "\n";
-	cout << "  " << tiles[0][0].get_status() << "  |  " << tiles[0][1].get_status() << "  |  " << tiles[0][2].get_status() << "  " << endl;
+	cout << "  " << get_space(0) << "  |  " << get_space(1) << "  |  " << get_space(2) << "  " << endl;
 	cout << "-----|-----|-----" << endl;
-	cout << "  " << tiles[1][0].get_status() << "  |  " << tiles[1][1].get_status() << "  |  " << tiles[1][2].get_status() << "  " << endl;
+	cout << "  " << get_space(3) << "  |  " << get_space(4) << "  |  " << get_space(5) << "  " << endl;
 	cout << "-----|-----|-----" << endl;
-	cout << "  " << tiles[2][0].get_status() << "  |  " << tiles[2][1].get_status() << "  |  " << tiles[2][2].get_status() << "  \n" << endl;
+	cout << "  " << get_space(6) << "  |  " << get_space(7) << "  |  " << get_space(8) << "  \n" << endl;
 
 	cout << "X bitboard: " <<  bitset<16>(x_bitboard) << endl;
 	cout << "O bitboard: " << bitset<16>(o_bitboard) << "\n" << endl;
@@ -119,7 +132,7 @@ set<string> Board::get_valid_moves() const
 	return valid_moves;
 }
 
-void Board::check_winner(int x, int y, string symbol)
+void Board::check_winner()
 {
 	// check draw
 	if (((x_bitboard | o_bitboard) & 0x01FF) == 0x01FF)
@@ -128,6 +141,7 @@ void Board::check_winner(int x, int y, string symbol)
         winner = false;
     }
 
+	//check winner
 	for (unsigned int i = 0; i < wins.size(); i++)
 	{
 		if ((x_bitboard & wins[i]) == wins[i])

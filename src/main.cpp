@@ -18,7 +18,7 @@ int main()
 	int compWins = 0;
 	int draws = 0;
 	srand(time(NULL));
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 1; i++)
 	{
 	cout << "Game " << i + 1 << endl;
 	Board board = Board();
