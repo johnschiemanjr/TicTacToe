@@ -133,6 +133,11 @@ set<string> Board::get_valid_moves() const
 	return valid_moves;
 }
 
+int Board::get_valid_moves_bitboard() const
+{
+	return o_bitboard | x_bitboard;
+}
+
 void Board::check_winner()
 {
 	// check draw

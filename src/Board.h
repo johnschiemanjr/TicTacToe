@@ -48,6 +48,7 @@ public:
 	bool is_game_over() const;
 	bool has_winner() const;
 	set<string> get_valid_moves() const;
+	int get_valid_moves_bitboard() const;
 	string get_space(int space) const;
 	void check_winner();
 	Board copy_board() const;

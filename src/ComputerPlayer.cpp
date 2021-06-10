@@ -99,7 +99,7 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	Eval evaluation;
 	if (current_board.is_game_over())
 	{
-		if (current_board.get_valid_moves().size() == 0 && !current_board.has_winner())
+		if (current_board.is_game_over() && !current_board.has_winner())
 		{
 			// game is a draw
 			evaluation.evaluation = 0;
