@@ -23,6 +23,7 @@ Board::Board():tiles{{Tile("0"), Tile("1"), Tile("2")},
 	game_over(false),
 	winner(false), x_bitboard(0), o_bitboard(0)
 {
+	this->o_bitboard = 0;
 };
 
 Board::Board(bool game_over_copy, bool winner_copy, int occupied) : tiles{{Tile("0"), Tile("1"), Tile("2")},
