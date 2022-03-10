@@ -127,16 +127,16 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	string min_move = "";
 	if (maximizing_player)
 	{
-		for (auto move : current_board.get_valid_moves())
+		for (auto move : current_board.get_open_spaces())
 		{
 			Board board_with_move = current_board;
-			board_with_move.make_move(move, get_symbol());
+			board_with_move.make_move(current_board.space_to_string(move), get_symbol());
 			Eval move_eval = mini_max(board_with_move, false);
 			int eval = move_eval.evaluation;
 			if (eval >= max_eval)
 			{
 				max_eval = eval;
-				max_move = move;
+				max_move = current_board.space_to_string(move);
 			}
 		}
 		evaluation.best_move = max_move;
@@ -144,17 +144,17 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	}
 	else
 	{
-		for (auto move : current_board.get_valid_moves())
+		for (auto move : current_board.get_open_spaces())
 		{
 			Board board_with_move = current_board;
 			string opposite = get_opposite_symbol(get_symbol());
-			board_with_move.make_move(move, opposite);
+			board_with_move.make_move(current_board.space_to_string(move), opposite);
 			Eval move_eval = mini_max(board_with_move, true);
 			int eval = move_eval.evaluation;
 			if (eval <= min_eval)
 			{
 				min_eval = eval;
-				min_move = move;
+				min_move = current_board.space_to_string(move);
 			}
 		}
 		evaluation.best_move = min_move;
