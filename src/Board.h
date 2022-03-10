@@ -47,7 +47,6 @@ public:
 	void make_move(string, string);
 	bool is_game_over() const;
 	bool has_winner() const;
-	set<string> get_valid_moves() const;
 	set<short> get_open_spaces() const;
 	int get_valid_moves_bitboard() const;
 	string get_space(int space) const;

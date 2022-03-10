@@ -42,7 +42,6 @@ string ComputerPlayer::take_turn(Board board)
 	{
 		//evaluation.best_move = get_random_move(board.get_valid_moves());
 		short move = get_random_move_bitboard(board.get_open_spaces());
-		cout << "computer choice " <<  bitset<16>(move) << endl;
 		evaluation.best_move = board.space_to_string(move);
 		break;
 	}
@@ -64,9 +63,9 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 {
 	Eval evaluation;
 
-	Node *initial_node = new Node(NULL, &current_board, "NO_MOVE", "NO_SYMBOL");
+	Node *initial_node = new Node(NULL, &current_board, -1, "NO_SYMBOL");
 	// get children nodes
-	for (auto move : current_board.get_valid_moves())
+	for (auto move : current_board.get_open_spaces())
 	{
 		Node *child = new Node(initial_node, &current_board, move, get_symbol());
 		initial_node->children.push_back(child);
@@ -79,14 +78,14 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 	}
 
 	double max_score = -99999999;
-	evaluation.best_move = get_random_move(current_board.get_valid_moves());
+	evaluation.best_move = current_board.space_to_string(get_random_move_bitboard(current_board.get_open_spaces()));
 	for(auto child : initial_node->children)
 	{
 		double average_score = child->total_score / child->visits;
 		if (average_score > max_score)
 		{
 			max_score = average_score;
-			evaluation.best_move = child->move;
+			evaluation.best_move = current_board.space_to_string(child->move);
 		}
 		//cout << "Move " << child->move << " Total score : " << child->total_score << " visits: " << child->visits << " for an average score of " << average_score << endl;
 	}

@@ -131,23 +131,6 @@ Board Board::copy_board() const
 	return new_board;
 }
 
-set<string> Board::get_valid_moves() const
-{
-	set<string> valid_moves;
-	for (int i = 0; i < 3; i++)
-	{
-		for (int j = 0; j < 3; j++)
-		{
-			if (tiles[i][j].get_status().compare(O) != 0 &&
-					tiles[i][j].get_status().compare(X) != 0)
-			{
-				valid_moves.insert(tiles[i][j].get_status());
-			}
-		}
-	}
-	return valid_moves;
-}
-
 set<short> Board::get_open_spaces() const
 {
 	set<short> open_spaces;
