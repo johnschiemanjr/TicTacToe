@@ -30,7 +30,7 @@ string HumanPlayer::take_turn(Board board)
 
 		if (user_choice_bitboard == valid_moves_bitboard)
 		{
-			cout << "INVALID MOVE BITBOARD " << user_choice << endl;
+			cout << user_choice <<  " is an invalid move, please re-enter:" << endl;
 		}
 	} while (user_choice_bitboard == valid_moves_bitboard);
 	return user_choice;

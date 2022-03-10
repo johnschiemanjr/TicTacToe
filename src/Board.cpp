@@ -65,6 +65,21 @@ void Board::make_move(string tile, string player_symbol)
 	}
 }
 
+//Temporary method to help convert new bitboard spaces to old string tiles
+string Board::space_to_string(short space) const
+{
+	int i = 0;
+	for (short s : spaces)
+	{
+		if (space == s)
+		{
+			return to_string(i);
+		}
+		i++;
+	}
+	return to_string(i);
+}
+
 string Board::get_space(int space) const
 {
 	if ((x_bitboard & spaces[space]) == spaces[space])
@@ -131,6 +146,19 @@ set<string> Board::get_valid_moves() const
 		}
 	}
 	return valid_moves;
+}
+
+set<short> Board::get_open_spaces() const
+{
+	set<short> open_spaces;
+	for (short space : spaces)
+	{
+		if ((get_valid_moves_bitboard() | space) != get_valid_moves_bitboard())
+		{
+			open_spaces.insert(space);
+		}
+	}
+	return open_spaces;
 }
 
 int Board::get_valid_moves_bitboard() const

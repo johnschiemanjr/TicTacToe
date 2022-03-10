@@ -24,6 +24,12 @@ string get_random_move(set<string> valid_moves)
 	return *select_random(valid_moves, r);
 }
 
+short get_random_move_bitboard(set<short> open_spaces)
+{
+	auto r = rand() % open_spaces.size();
+	return *select_random(open_spaces, r);
+}
+
 string get_opposite_symbol(string symbol)
 {
 	if (symbol.compare(X) == 0)

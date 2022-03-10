@@ -16,6 +16,7 @@
 #include "Node.h"
 #include <memory>
 #include "helper.h"
+#include <bitset>
 
 using namespace std;
 
@@ -39,7 +40,10 @@ string ComputerPlayer::take_turn(Board board)
 	switch (strategy) {
 	case Strategy::RANDOM:
 	{
-		evaluation.best_move = get_random_move(board.get_valid_moves());
+		//evaluation.best_move = get_random_move(board.get_valid_moves());
+		short move = get_random_move_bitboard(board.get_open_spaces());
+		cout << "computer choice " <<  bitset<16>(move) << endl;
+		evaluation.best_move = board.space_to_string(move);
 		break;
 	}
 	case Strategy::MINIMAX:

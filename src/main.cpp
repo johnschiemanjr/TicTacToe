@@ -18,15 +18,15 @@ int main()
 	int compWins = 0;
 	int draws = 0;
 	srand(time(NULL));
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 100; i++)
 	{
 	cout << "Game " << i + 1 << endl;
 	Board board = Board();
 	board.print_board();
 
 	//HumanPlayer *human = new HumanPlayer("Computer 1", O);
-	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::MONTE_CARLO);
-	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MINIMAX);
+	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::RANDOM);
+	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MONTE_CARLO);
 	vector<Player*> players;
 
 	if (rand() % 2 == 0)

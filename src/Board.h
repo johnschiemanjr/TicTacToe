@@ -48,8 +48,10 @@ public:
 	bool is_game_over() const;
 	bool has_winner() const;
 	set<string> get_valid_moves() const;
+	set<short> get_open_spaces() const;
 	int get_valid_moves_bitboard() const;
 	string get_space(int space) const;
+	string space_to_string(short space) const;
 	void check_winner();
 	Board copy_board() const;
 	virtual ~Board();

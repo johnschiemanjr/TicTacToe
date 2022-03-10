@@ -14,6 +14,7 @@
 using namespace std;
 
 string get_random_move(set<string> valid_moves);
+short get_random_move_bitboard(set<short> open_spaces);
 string get_opposite_symbol(string);
 
 #endif /* HELPER_H_ */
