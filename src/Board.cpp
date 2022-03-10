@@ -14,7 +14,7 @@
 
 using namespace std;
 
-// learning moment: if i had wanted to declare these in the constructor,
+// learning moment: if I had wanted to declare these in the constructor,
 // it would have had the same effect as using this initialization list
 Board::Board():tiles{{Tile("0"), Tile("1"), Tile("2")},
 	{Tile("3"), Tile("4"), Tile("5")},

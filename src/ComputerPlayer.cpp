@@ -159,3 +159,4 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 
 	return evaluation;
 }
+
