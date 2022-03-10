@@ -20,7 +20,7 @@ Node::Node(Node *parent, Board *state, short move, string symbol) : visits(0), t
 	if (move != -1)
 	{
 		this->state = state->copy_board();
-		this->state.make_move(state->space_to_string(move), symbol);
+		this->state.make_move(move, symbol);
 	}
 }
 
@@ -37,7 +37,7 @@ void Node::rollout()
 	string symbol_to_play = get_opposite_symbol(symbol_played);
 	while (!state.is_game_over())
 	{
-		state.make_move(state.space_to_string(get_random_move_bitboard(state.get_open_spaces())), symbol_to_play);
+		state.make_move(get_random_move_bitboard(state.get_open_spaces()), symbol_to_play);
 		symbol_to_play = get_opposite_symbol(symbol_to_play);
 	}
 

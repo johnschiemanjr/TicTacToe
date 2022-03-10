@@ -7,7 +7,7 @@
 
 #include <iostream>
 #include <set>
-#include "Tile.h"
+#include "Board.h"
 
 using namespace std;
 template<typename S>

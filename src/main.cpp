@@ -6,7 +6,6 @@
 #include "Player.h"
 #include "ComputerPlayer.h"
 #include "HumanPlayer.h"
-#include "Tile.h"
 #include <utility>
 #include <memory>
 
@@ -18,15 +17,15 @@ int main()
 	int compWins = 0;
 	int draws = 0;
 	srand(time(NULL));
-	for (int i = 0; i < 100; i++)
+	for (int i = 0; i < 10; i++)
 	{
 	cout << "Game " << i + 1 << endl;
 	Board board = Board();
 	board.print_board();
 
 	//HumanPlayer *human = new HumanPlayer("Computer 1", O);
-	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::RANDOM);
-	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MONTE_CARLO);
+	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::MONTE_CARLO);
+	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MINIMAX);
 	vector<Player*> players;
 
 	if (rand() % 2 == 0)
@@ -45,7 +44,7 @@ int main()
 	int turn_counter = 0;
 	do
 	{
-		string move = players[turn_counter % 2]->take_turn(board);
+		short move = players[turn_counter % 2]->take_turn(board);
 		board.make_move(move, players[turn_counter % 2]->get_symbol());
 		turn_counter++;
 

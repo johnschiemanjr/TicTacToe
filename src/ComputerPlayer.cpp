@@ -16,7 +16,6 @@
 #include "Node.h"
 #include <memory>
 #include "helper.h"
-#include <bitset>
 
 using namespace std;
 
@@ -31,7 +30,7 @@ ComputerPlayer::~ComputerPlayer()
 {
 }
 
-string ComputerPlayer::take_turn(Board board)
+short ComputerPlayer::take_turn(Board board)
 {
 	cout << get_name() << " taking turn...\n";
 
@@ -42,7 +41,7 @@ string ComputerPlayer::take_turn(Board board)
 	{
 		//evaluation.best_move = get_random_move(board.get_valid_moves());
 		short move = get_random_move_bitboard(board.get_open_spaces());
-		evaluation.best_move = board.space_to_string(move);
+		evaluation.best_move = move;
 		break;
 	}
 	case Strategy::MINIMAX:
@@ -54,7 +53,7 @@ string ComputerPlayer::take_turn(Board board)
 		evaluation = monte_carlo(board);
 	}
 
-	cout << "Computer choice: " << evaluation.best_move << endl;
+	cout << "Computer choice: " << board.space_to_string(evaluation.best_move) << endl;
 
 	return evaluation.best_move;
 }
@@ -78,14 +77,14 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 	}
 
 	double max_score = -99999999;
-	evaluation.best_move = current_board.space_to_string(get_random_move_bitboard(current_board.get_open_spaces()));
+	evaluation.best_move = get_random_move_bitboard(current_board.get_open_spaces());
 	for(auto child : initial_node->children)
 	{
 		double average_score = child->total_score / child->visits;
 		if (average_score > max_score)
 		{
 			max_score = average_score;
-			evaluation.best_move = current_board.space_to_string(child->move);
+			evaluation.best_move = child->move;
 		}
 		//cout << "Move " << child->move << " Total score : " << child->total_score << " visits: " << child->visits << " for an average score of " << average_score << endl;
 	}
@@ -122,20 +121,20 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 
 	int max_eval = -2;
 	int min_eval = 2;
-	string max_move = "";
-	string min_move = "";
+	short max_move;
+	short min_move;
 	if (maximizing_player)
 	{
 		for (auto move : current_board.get_open_spaces())
 		{
 			Board board_with_move = current_board;
-			board_with_move.make_move(current_board.space_to_string(move), get_symbol());
+			board_with_move.make_move(move, get_symbol());
 			Eval move_eval = mini_max(board_with_move, false);
 			int eval = move_eval.evaluation;
 			if (eval >= max_eval)
 			{
 				max_eval = eval;
-				max_move = current_board.space_to_string(move);
+				max_move = move;
 			}
 		}
 		evaluation.best_move = max_move;
@@ -147,13 +146,13 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 		{
 			Board board_with_move = current_board;
 			string opposite = get_opposite_symbol(get_symbol());
-			board_with_move.make_move(current_board.space_to_string(move), opposite);
+			board_with_move.make_move(move, opposite);
 			Eval move_eval = mini_max(board_with_move, true);
 			int eval = move_eval.evaluation;
 			if (eval <= min_eval)
 			{
 				min_eval = eval;
-				min_move = current_board.space_to_string(move);
+				min_move = move;
 			}
 		}
 		evaluation.best_move = min_move;

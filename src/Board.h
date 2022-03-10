@@ -10,11 +10,13 @@
 
 #include <string>
 #include <iostream>
-#include "Tile.h"
 #include <set>
 #include <vector>
 
 using namespace std;
+
+const string O = "O";
+const string X = "X";
 
 const std::vector<short> spaces =
     { 0b0000000000000001, // 0
@@ -43,20 +45,18 @@ class Board
 public:
 	void print_board() const;
 	Board();
-	Board(bool, bool, int);
-	void make_move(string, string);
+	Board(bool, bool);
+	void make_move(short, string);
 	bool is_game_over() const;
 	bool has_winner() const;
 	set<short> get_open_spaces() const;
-	int get_valid_moves_bitboard() const;
+	short get_valid_moves_bitboard() const;
 	string get_space(int space) const;
 	string space_to_string(short space) const;
 	void check_winner();
 	Board copy_board() const;
 	virtual ~Board();
 private:
-	Tile tiles[3][3];
-	int occupied_tiles;
 	bool game_over;
 	bool winner;
 	short x_bitboard;

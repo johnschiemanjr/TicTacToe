@@ -16,7 +16,7 @@ using namespace std;
 
 struct Eval
 {
-	string best_move;
+	short best_move;
 	int evaluation;
 };
 
@@ -33,7 +33,7 @@ public:
 	using Player::Player;
 	using Player::get_name;
 	using Player::get_symbol;
-	string take_turn(Board) override;
+	short take_turn(Board) override;
 	Eval monte_carlo(Board);
 	Eval mini_max(Board, bool);
 	ComputerPlayer(string, string, Strategy);
