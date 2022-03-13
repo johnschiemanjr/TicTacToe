@@ -5,9 +5,7 @@
  *      Author: John
  */
 
-#include <string>
 #include <iostream>
-#include <set>
 #include "Board.h"
 #include "HumanPlayer.h"
 
@@ -21,16 +19,20 @@ string HumanPlayer::take_turn(Board board)
 {
 	cout << "Please enter your move:\n";
 
-	set<string> valid_moves = board.get_valid_moves();
+	int user_choice_bitboard;
+	int valid_moves_bitboard = board.get_valid_moves_bitboard();
+
 	string user_choice;
 	do
 	{
 		cin >> user_choice;
-		if (valid_moves.find(user_choice) == valid_moves.end())
+		user_choice_bitboard = spaces[stoi(user_choice)] | valid_moves_bitboard;
+
+		if (user_choice_bitboard == valid_moves_bitboard)
 		{
-			cout << "INVALID MOVE " << user_choice << endl;
+			cout << "INVALID MOVE BITBOARD " << user_choice << endl;
 		}
-	} while (valid_moves.find(user_choice) == valid_moves.end());
+	} while (user_choice_bitboard == valid_moves_bitboard);
 	return user_choice;
 }
 
