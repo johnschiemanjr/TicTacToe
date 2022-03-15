@@ -6,8 +6,8 @@
  */
 
 #include <iostream>
-#include "Board.h"
 #include "HumanPlayer.h"
+#include "helper.h"
 
 using namespace std;
 

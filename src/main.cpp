@@ -8,6 +8,7 @@
 #include "HumanPlayer.h"
 #include <utility>
 #include <memory>
+#include "helper.h"
 
 using namespace std;
 
@@ -17,14 +18,14 @@ int main()
 	int compWins = 0;
 	int draws = 0;
 	srand(time(NULL));
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 1; i++)
 	{
 	cout << "Game " << i + 1 << endl;
 	Board board = Board();
 	board.print_board();
 
 	//HumanPlayer *human = new HumanPlayer("Computer 1", O);
-	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::MONTE_CARLO);
+	ComputerPlayer *human = new ComputerPlayer("Computer 1", O, ComputerPlayer::Strategy::RANDOM);
 	ComputerPlayer *computer = new ComputerPlayer("Computer 2", X, ComputerPlayer::Strategy::MINIMAX);
 	vector<Player*> players;
 
@@ -75,9 +76,10 @@ int main()
 
 	delete human;
 	delete computer;
+
 	}
 	cout << "Computer 1 wins: " << humanWins << endl;
 	cout << "Computer 2 wins: " << compWins << endl;
-	cout << "Draws : " << draws << endl;
+	cout << "Draws: " << draws << endl;
 	return 0;
 }

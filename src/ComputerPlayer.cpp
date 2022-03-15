@@ -16,6 +16,7 @@
 #include "Node.h"
 #include <memory>
 #include "helper.h"
+#include <chrono>
 
 using namespace std;
 
@@ -52,8 +53,6 @@ short ComputerPlayer::take_turn(Board board)
 	case Strategy::MONTE_CARLO:
 		evaluation = monte_carlo(board);
 	}
-
-	cout << "Computer choice: " << board.space_to_string(evaluation.best_move) << endl;
 
 	return evaluation.best_move;
 }

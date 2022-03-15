@@ -7,7 +7,8 @@
 
 #include <iostream>
 #include <set>
-#include "Board.h"
+#include <vector>
+#include "helper.h"
 
 using namespace std;
 template<typename S>
