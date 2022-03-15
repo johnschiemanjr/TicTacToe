@@ -10,11 +10,10 @@
 #include <iostream>
 #include <set>
 #include <bitset>
+#include "helper.h"
 
 using namespace std;
 
-// learning moment: if I had wanted to declare these in the constructor,
-// it would have had the same effect as using this initialization list
 Board::Board(): game_over(false), winner(false), x_bitboard(0), o_bitboard(0)
 {
 };
