@@ -22,10 +22,10 @@ public:
 	vector<Node*> children;
 	int visits;
 	Board state;
-	string move;
+	short move;
 	string symbol_played;
 	double total_score;
-	Node(Node*, Board*, string, string);
+	Node(Node*, Board*, short, string);
 	~Node();
 	void search();
 	void rollout();

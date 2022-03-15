@@ -19,7 +19,7 @@ public:
 	Player(string, string);
 	string get_name() const;
 	string get_symbol() const;
-	virtual string take_turn(Board) = 0;
+	virtual short take_turn(Board) = 0;
 	virtual ~Player();
 private:
 	string player_name;

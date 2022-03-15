@@ -12,12 +12,12 @@
 #include "helper.h"
 #include <set>
 
-Node::Node(Node *parent, Board *state, string move, string symbol) : visits(0), total_score(0)
+Node::Node(Node *parent, Board *state, short move, string symbol) : visits(0), total_score(0)
 {
 	this->parent = parent;
 	this->move = move;
 	this->symbol_played = symbol;
-	if (move.compare("NO_MOVE") != 0)
+	if (move != -1)
 	{
 		this->state = state->copy_board();
 		this->state.make_move(move, symbol);
@@ -37,7 +37,7 @@ void Node::rollout()
 	string symbol_to_play = get_opposite_symbol(symbol_played);
 	while (!state.is_game_over())
 	{
-		state.make_move(get_random_move(state.get_valid_moves()), symbol_to_play);
+		state.make_move(get_random_move_bitboard(state.get_open_spaces()), symbol_to_play);
 		symbol_to_play = get_opposite_symbol(symbol_to_play);
 	}
 
@@ -88,7 +88,7 @@ void Node::search()
 			}
 			else
 			{
-				for (auto move : state.get_valid_moves())
+				for (auto move : state.get_open_spaces())
 				{
 					Node *child = new Node(this, &state, move, get_opposite_symbol(symbol_played));
 					children.push_back(child);

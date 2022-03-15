@@ -19,7 +19,7 @@ public:
 	using Player::Player;
 	using Player::get_name;
 	using Player::get_symbol;
-	string take_turn(Board board) override;
+	short take_turn(Board board) override;
 	virtual ~HumanPlayer();
 };
 
