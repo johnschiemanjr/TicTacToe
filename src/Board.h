@@ -19,6 +19,7 @@ class Board
 {
 public:
 	bool game_on() const;
+	void print_row(int, int, int) const;
 	void print_board() const;
 	Board();
 	Board(bool, bool);

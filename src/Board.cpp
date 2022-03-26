@@ -69,14 +69,22 @@ string Board::get_space(int space) const
 	else return to_string(space);
 }
 
+void Board::print_row(int left, int center, int right) const
+{
+	cout << "  " << get_space(left) << "  |  " << get_space(center) << "  |  " << get_space(right);
+}
+
 void Board::print_board() const
 {
 	cout << "\n";
-	cout << "  " << get_space(0) << "  |  " << get_space(1) << "  |  " << get_space(2) << "  " << endl;
+	print_row(0, 1, 2);
+	cout << "\n";
 	cout << "-----|-----|-----" << endl;
-	cout << "  " << get_space(3) << "  |  " << get_space(4) << "  |  " << get_space(5) << "  " << endl;
+	print_row(3, 4, 5);
+	cout << "\n";
 	cout << "-----|-----|-----" << endl;
-	cout << "  " << get_space(6) << "  |  " << get_space(7) << "  |  " << get_space(8) << "  \n" << endl;
+	print_row(6, 7, 8);
+	cout << "\n" << endl;
 
 //	cout << "X bitboard: " <<  bitset<16>(x_bitboard) << endl;
 //	cout << "O bitboard: " << bitset<16>(o_bitboard) << "\n" << endl;
