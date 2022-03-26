@@ -9,7 +9,7 @@
 #define PLAYER_H_
 
 #include <string>
-#include "Board.h"
+#include "LocalBoard.h"
 
 using namespace std;
 

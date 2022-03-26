@@ -16,6 +16,12 @@ using namespace std;
 const string O = "O";
 const string X = "X";
 
+struct UltMove
+{
+	short global_space;
+	short local_space;
+};
+
 const std::vector<short> spaces =
     { 0b0000000000000001, // 0
       0b0000000000000010,

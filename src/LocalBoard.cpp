@@ -1,11 +1,11 @@
 /*
- * Board.cpp
+ * LocalBoard.cpp
  *
- *  Created on: Nov 15, 2020
+ *  Created on: Mar 19, 2022
  *      Author: John
  */
 
-#include "Board.h"
+#include "LocalBoard.h"
 #include <string>
 #include <iostream>
 #include <set>
@@ -14,21 +14,21 @@
 
 using namespace std;
 
-Board::Board(): game_over(false), winner(false), x_bitboard(0), o_bitboard(0)
+LocalBoard::LocalBoard(): game_over(false), winner(false), x_bitboard(0), o_bitboard(0)
 {
 };
 
-Board::Board(bool game_over_copy, bool winner_copy) : x_bitboard(0), o_bitboard(0)
+LocalBoard::LocalBoard(bool game_over_copy, bool winner_copy) : x_bitboard(0), o_bitboard(0)
 {
 	this->game_over = game_over_copy;
 	this->winner = winner_copy;
 }
 
-Board::~Board()
+LocalBoard::~LocalBoard()
 {
 }
 
-void Board::make_move(short move, string player_symbol)
+void LocalBoard::make_move(short move, string player_symbol)
 {
 	if (!player_symbol.compare(X))
 	{
@@ -42,7 +42,7 @@ void Board::make_move(short move, string player_symbol)
 }
 
 // Method to convert space to GUI friendly string
-string Board::space_to_string(short space) const
+string LocalBoard::space_to_string(short space) const
 {
 	int i = 0;
 	for (short s : spaces)
@@ -56,7 +56,7 @@ string Board::space_to_string(short space) const
 	return to_string(i);
 }
 
-string Board::get_space(int space) const
+string LocalBoard::get_space(int space) const
 {
 	if ((x_bitboard & spaces[space]) == spaces[space])
 	{
@@ -69,12 +69,12 @@ string Board::get_space(int space) const
 	else return to_string(space);
 }
 
-void Board::print_row(int left, int center, int right) const
+void LocalBoard::print_row(int left, int center, int right) const
 {
 	cout << "  " << get_space(left) << "  |  " << get_space(center) << "  |  " << get_space(right);
 }
 
-void Board::print_board() const
+void LocalBoard::print_board() const
 {
 	cout << "\n";
 	print_row(0, 1, 2);
@@ -90,25 +90,25 @@ void Board::print_board() const
 //	cout << "O bitboard: " << bitset<16>(o_bitboard) << "\n" << endl;
 }
 
-bool Board::is_game_over() const
+bool LocalBoard::is_game_over() const
 {
 	return game_over;
 }
 
-bool Board::has_winner() const
+bool LocalBoard::has_winner() const
 {
 	return winner;
 }
 
-Board Board::copy_board() const
+LocalBoard LocalBoard::copy_board() const
 {
-	Board new_board = Board(game_over, winner);
+	LocalBoard new_board = LocalBoard(game_over, winner);
 	new_board.o_bitboard = o_bitboard;
 	new_board.x_bitboard = x_bitboard;
 	return new_board;
 }
 
-set<short> Board::get_open_spaces() const
+set<short> LocalBoard::get_open_spaces() const
 {
 	set<short> open_spaces;
 	for (short space : spaces)
@@ -121,12 +121,12 @@ set<short> Board::get_open_spaces() const
 	return open_spaces;
 }
 
-short Board::get_valid_moves_bitboard() const
+short LocalBoard::get_valid_moves_bitboard() const
 {
 	return o_bitboard | x_bitboard;
 }
 
-void Board::check_winner()
+void LocalBoard::check_winner()
 {
 	// check draw
 	if (((x_bitboard | o_bitboard) & 0x01FF) == 0x01FF)

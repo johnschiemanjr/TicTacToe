@@ -17,10 +17,13 @@ HumanPlayer::~HumanPlayer()
 
 short HumanPlayer::take_turn(Board board)
 {
+	LocalBoard* local_board = dynamic_cast<LocalBoard*>(board);
+
 	cout << "Please enter your move:\n";
 
 	int user_choice_bitboard;
-	int valid_moves_bitboard = board.get_valid_moves_bitboard();
+	int valid_moves_bitboard = local_board->get_valid_moves_bitboard();
+	delete local_board;
 
 	string user_choice;
 	do

@@ -8,7 +8,7 @@
 #include <string>
 #include <iostream>
 #include <set>
-#include "Board.h"
+#include "LocalBoard.h"
 #include "ComputerPlayer.h"
 #include "Player.h"
 #include <map>
@@ -31,7 +31,7 @@ ComputerPlayer::~ComputerPlayer()
 {
 }
 
-short ComputerPlayer::take_turn(Board board)
+short ComputerPlayer::take_turn(LocalBoard board)
 {
 	cout << get_name() << " taking turn...\n";
 
@@ -57,7 +57,7 @@ short ComputerPlayer::take_turn(Board board)
 	return evaluation.best_move;
 }
 
-Eval ComputerPlayer::monte_carlo(Board current_board)
+Eval ComputerPlayer::monte_carlo(LocalBoard current_board)
 {
 	Eval evaluation;
 
@@ -95,7 +95,7 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 	delete initial_node;
 }
 
-Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
+Eval ComputerPlayer::mini_max(LocalBoard current_board, bool maximizing_player)
 {
 	Eval evaluation;
 	if (current_board.is_game_over())
@@ -126,7 +126,7 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	{
 		for (auto move : current_board.get_open_spaces())
 		{
-			Board board_with_move = current_board;
+			LocalBoard board_with_move = current_board;
 			board_with_move.make_move(move, get_symbol());
 			Eval move_eval = mini_max(board_with_move, false);
 			int eval = move_eval.evaluation;
@@ -143,7 +143,7 @@ Eval ComputerPlayer::mini_max(Board current_board, bool maximizing_player)
 	{
 		for (auto move : current_board.get_open_spaces())
 		{
-			Board board_with_move = current_board;
+			LocalBoard board_with_move = current_board;
 			string opposite = get_opposite_symbol(get_symbol());
 			board_with_move.make_move(move, opposite);
 			Eval move_eval = mini_max(board_with_move, true);

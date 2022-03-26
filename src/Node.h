@@ -11,7 +11,7 @@
 #include <string>
 #include <memory>
 #include <vector>
-#include "Board.h"
+#include "LocalBoard.h"
 
 using namespace std;
 
@@ -21,11 +21,11 @@ public:
 	Node *parent;
 	vector<Node*> children;
 	int visits;
-	Board state;
+	LocalBoard state;
 	short move;
 	string symbol_played;
 	double total_score;
-	Node(Node*, Board*, short, string);
+	Node(Node*, LocalBoard*, short, string);
 	~Node();
 	void search();
 	void rollout();

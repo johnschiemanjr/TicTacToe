@@ -12,7 +12,7 @@
 #include "helper.h"
 #include <set>
 
-Node::Node(Node *parent, Board *state, short move, string symbol) : visits(0), total_score(0)
+Node::Node(Node *parent, LocalBoard *state, short move, string symbol) : visits(0), total_score(0)
 {
 	this->parent = parent;
 	this->move = move;
@@ -76,7 +76,7 @@ void Node::search()
 		// leaf node
 		if (visits == 0)
 		{
-			Board current_board = state.copy_board();
+			LocalBoard current_board = state.copy_board();
 			rollout();
 			state = current_board.copy_board();
 		}
