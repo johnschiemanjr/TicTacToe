@@ -10,11 +10,18 @@
 
 #include <string>
 #include <set>
+#include <vector>
 
 using namespace std;
 
 const string O = "O";
 const string X = "X";
+
+struct UltMove
+{
+	short global_space;
+	short local_space;
+};
 
 const std::vector<short> spaces =
     { 0b0000000000000001, // 0
@@ -38,8 +45,7 @@ const std::vector<int> wins =
       0b0000000100010001, // 2 diagonals
       0b0000000001010100 };
 
-string get_random_move(set<string> valid_moves);
-short get_random_move_bitboard(set<short> open_spaces);
+short get_random_move(set<short> open_spaces);
 string get_opposite_symbol(string);
 
 #endif /* HELPER_H_ */

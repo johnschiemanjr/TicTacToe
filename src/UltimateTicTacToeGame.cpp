@@ -12,14 +12,14 @@
 #include <random>
 #include "Board.h"
 #include "UltimateBoard.h"
-#include "Player.h"
 #include "ComputerPlayer.h"
+#include "HumanUltimatePlayer.h"
 #include <utility>
 #include <memory>
 #include "helper.h"
 #include "UltimateBoardInterface.h"
 
-UltimateTicTacToeGame::UltimateTicTacToeGame(Player *player1, Player *player2, int games)
+UltimateTicTacToeGame::UltimateTicTacToeGame(UltimatePlayer *player1, UltimatePlayer *player2, int games)
 {
 	this->games = games;
 	this->player1 = player1;
@@ -43,9 +43,7 @@ void UltimateTicTacToeGame::play()
 		UltimateBoardInterface interface = UltimateBoardInterface();
 		interface.print_board(ult_board.get_boards());
 
-		/*HumanUltimatePlayer *player1 = new HumanUltimatePlayer("Human 1", O);
-		HumanUltimatePlayer *player2 = new HumanUltimatePlayer("Human 2", X);
-		vector<HumanUltimatePlayer*> players;
+		vector<UltimatePlayer*> players;
 
 		if (rand() % 2 == 0)
 		{
@@ -63,7 +61,16 @@ void UltimateTicTacToeGame::play()
 		int turn_counter = 0;
 		do
 		{
-			UltMove move = players[turn_counter % 2]->take_turn(ult_board);
+			cout << players[turn_counter % 2]->get_symbol() << " to play." << endl;
+			UltMove move;
+			if (ult_board.get_board_to_play() == ult_board.FREE_PLAY)
+			{
+				 move = players[turn_counter % 2]->take_turn(ult_board);
+			}
+			else
+			{
+				move = players[turn_counter % 2]->take_turn(ult_board, ult_board.get_board_to_play());
+			}
 			ult_board.make_move(move, players[turn_counter % 2]->get_symbol());
 			turn_counter++;
 
@@ -71,7 +78,7 @@ void UltimateTicTacToeGame::play()
 
 		} while (!ult_board.is_game_over());
 
-		const int MAX_MOVES = 9;
+		const int MAX_MOVES = 81;
 		if (turn_counter == MAX_MOVES && !ult_board.has_winner())
 		{
 			cout << "It's a draw!" << endl;
@@ -90,7 +97,7 @@ void UltimateTicTacToeGame::play()
 			}
 		}
 
-		interface.print_board(ult_board.get_boards());*/
+		interface.print_board(ult_board.get_boards());
 	}
 	cout << "Computer 1 wins: " << player1Wins << endl;
 	cout << "Computer 2 wins: " << player2Wins << endl;

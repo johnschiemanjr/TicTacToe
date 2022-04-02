@@ -37,7 +37,7 @@ void Node::rollout()
 	string symbol_to_play = get_opposite_symbol(symbol_played);
 	while (!state.is_game_over())
 	{
-		state.make_move(get_random_move_bitboard(state.get_open_spaces()), symbol_to_play);
+		state.make_move(get_random_move(state.get_open_spaces()), symbol_to_play);
 		symbol_to_play = get_opposite_symbol(symbol_to_play);
 	}
 

@@ -8,17 +8,17 @@
 #ifndef ULTIMATETICTACTOEGAME_H_
 #define ULTIMATETICTACTOEGAME_H_
 
-#include "Player.h"
+#include "UltimatePlayer.h"
 
 class UltimateTicTacToeGame
 {
 public:
-	UltimateTicTacToeGame(Player*, Player*, int);
+	UltimateTicTacToeGame(UltimatePlayer*, UltimatePlayer*, int);
 	virtual ~UltimateTicTacToeGame();
 	void play();
 private:
-	Player* player1;
-	Player* player2;
+	UltimatePlayer* player1;
+	UltimatePlayer* player2;
 	int games;
 };
 
