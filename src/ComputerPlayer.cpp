@@ -40,8 +40,7 @@ short ComputerPlayer::take_turn(Board board)
 	switch (strategy) {
 	case Strategy::RANDOM:
 	{
-		//evaluation.best_move = get_random_move(board.get_valid_moves());
-		short move = get_random_move_bitboard(board.get_open_spaces());
+		short move = get_random_move(board.get_open_spaces());
 		evaluation.best_move = move;
 		break;
 	}
@@ -76,7 +75,7 @@ Eval ComputerPlayer::monte_carlo(Board current_board)
 	}
 
 	double max_score = -99999999;
-	evaluation.best_move = get_random_move_bitboard(current_board.get_open_spaces());
+	evaluation.best_move = get_random_move(current_board.get_open_spaces());
 	for(auto child : initial_node->children)
 	{
 		double average_score = child->total_score / child->visits;

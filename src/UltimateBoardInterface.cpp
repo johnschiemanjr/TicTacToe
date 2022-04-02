@@ -45,7 +45,7 @@ void UltimateBoardInterface::print_board(Board *boards) const
 		cout << "  " << endl;
 		if (i != 2)
 		{
-			cout << "------------------|-------------------|-------------------" << endl;
+			cout << "==================|===================|===================" << endl;
 		}
 	}
 	cout << "\n";
